@@ -1,0 +1,97 @@
+.team-form {
+  width: 100%;
+}
+
+.member-selector {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.member-selector select {
+  flex: 1;
+}
+
+.selected-members {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.member-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: var(--light-bg);
+  border-radius: 8px;
+  min-height: 100px;
+}
+
+.dark .member-list {
+  background: var(--dark-bg);
+}
+
+.member-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--light-surface);
+  border: 1px solid var(--light-border);
+  border-radius: 20px;
+  transition: all var(--transition-speed);
+}
+
+.dark .member-chip {
+  background: var(--dark-surface);
+  border-color: var(--dark-border);
+}
+
+.member-chip .member-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.member-chip span {
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+
+.dark .member-chip span {
+  color: var(--text-primary-dark);
+}
+
+.member-chip button {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: all var(--transition-speed);
+}
+
+.member-chip button:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--danger-color);
+}
+
+.empty-members {
+  width: 100%;
+  text-align: center;
+  color: var(--text-secondary);
+  font-style: italic;
+  padding: 2rem;
+}
+
+.dark .empty-members {
+  color: var(--text-secondary-dark);
+}

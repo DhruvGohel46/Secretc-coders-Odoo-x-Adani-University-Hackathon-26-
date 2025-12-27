@@ -1,0 +1,240 @@
+.kanban-card {
+  position: relative;
+  background: var(--light-surface);
+  border-radius: 12px;
+  padding: 1rem;
+  border: 1px solid var(--light-border);
+  cursor: grab;
+  transition: all var(--transition-speed);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.dark .kanban-card {
+  background: var(--dark-bg);
+  border-color: var(--dark-border);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.kanban-card.dragging {
+  cursor: grabbing;
+  opacity: 0.7;
+  transform: rotate(3deg);
+}
+
+.kanban-card.overdue {
+  border-left-width: 4px;
+  border-left-color: var(--danger-color);
+}
+
+.overdue-badge {
+  position: absolute;
+  top: -8px;
+  right: 10px;
+  background: var(--danger-color);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 0.75rem;
+}
+
+.card-header h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.dark .card-header h4 {
+  color: var(--text-primary-dark);
+}
+
+.card-actions-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: all var(--transition-speed);
+}
+
+.card-actions-btn:hover {
+  background: var(--light-bg);
+  color: var(--primary-color);
+}
+
+.dark .card-actions-btn:hover {
+  background: var(--dark-surface);
+}
+
+.card-actions-menu {
+  position: absolute;
+  top: 2.5rem;
+  right: 1rem;
+  background: var(--light-surface);
+  border: 1px solid var(--light-border);
+  border-radius: 8px;
+  padding: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  min-width: 120px;
+}
+
+.dark .card-actions-menu {
+  background: var(--dark-surface);
+  border-color: var(--dark-border);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.card-actions-menu button {
+  width: 100%;
+  background: transparent;
+  border: none;
+  padding: 0.5rem;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 4px;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  transition: all var(--transition-speed);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dark .card-actions-menu button {
+  color: var(--text-primary-dark);
+}
+
+.card-actions-menu button:hover {
+  background: var(--light-bg);
+}
+
+.dark .card-actions-menu button:hover {
+  background: var(--dark-bg);
+}
+
+.card-actions-menu button.delete:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--danger-color);
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.card-info-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.dark .card-info-row {
+  color: var(--text-secondary-dark);
+}
+
+.info-icon {
+  color: var(--primary-color);
+  font-size: 0.9rem;
+}
+
+.equipment-name {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.dark .equipment-name {
+  color: var(--text-primary-dark);
+}
+
+.card-assignee {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: var(--light-bg);
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.dark .card-assignee {
+  background: var(--dark-surface);
+}
+
+.assignee-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--light-border);
+}
+
+.dark .card-footer {
+  border-top-color: var(--dark-border);
+}
+
+.request-type {
+  font-size: 0.8rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  background: var(--light-bg);
+  color: var(--text-secondary);
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.dark .request-type {
+  background: var(--dark-surface);
+  color: var(--text-secondary-dark);
+}
+
+.duration {
+  font-size: 0.85rem;
+  color: var(--success-color);
+  font-weight: 600;
+}
+
+.drag-indicator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  opacity: 0.2;
+}

@@ -1,0 +1,115 @@
+.kanban-board {
+  padding: 0;
+}
+
+.kanban-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.kanban-header-left h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.dark .kanban-header-left h1 {
+  color: var(--text-primary-dark);
+}
+
+.kanban-header-left p {
+  color: var(--text-secondary);
+}
+
+.dark .kanban-header-left p {
+  color: var(--text-secondary-dark);
+}
+
+.kanban-header-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-box svg {
+  position: absolute;
+  left: 1rem;
+  color: var(--text-secondary);
+  pointer-events: none;
+}
+
+.search-box input {
+  padding: 0.75rem 1rem 0.75rem 2.8rem;
+  border: 1px solid var(--light-border);
+  border-radius: 10px;
+  background: var(--light-surface);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  min-width: 250px;
+  transition: all var(--transition-speed);
+}
+
+.dark .search-box input {
+  background: var(--dark-surface);
+  border-color: var(--dark-border);
+  color: var(--text-primary-dark);
+}
+
+.search-box input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.kanban-columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  min-height: 600px;
+}
+
+.kanban-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 1024px) {
+  .kanban-columns {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .kanban-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .kanban-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .kanban-header-actions {
+    width: 100%;
+  }
+
+  .search-box input {
+    width: 100%;
+    min-width: auto;
+  }
+}

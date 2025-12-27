@@ -1,0 +1,119 @@
+.equipment-list {
+  padding: 0;
+}
+
+.equipment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.equipment-header-left h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.dark .equipment-header-left h1 {
+  color: var(--text-primary-dark);
+}
+
+.equipment-header-left p {
+  color: var(--text-secondary);
+}
+
+.dark .equipment-header-left p {
+  color: var(--text-secondary-dark);
+}
+
+.equipment-header-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.view-toggle {
+  display: flex;
+  gap: 0.5rem;
+  background: var(--light-surface);
+  padding: 0.25rem;
+  border-radius: 8px;
+  border: 1px solid var(--light-border);
+}
+
+.dark .view-toggle {
+  background: var(--dark-surface);
+  border-color: var(--dark-border);
+}
+
+.view-toggle button {
+  background: transparent;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all var(--transition-speed);
+}
+
+.view-toggle button:hover {
+  color: var(--primary-color);
+}
+
+.view-toggle button.active {
+  background: var(--primary-color);
+  color: white;
+}
+
+.equipment-container {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.equipment-container.grid {
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+}
+
+.equipment-container.table {
+  grid-template-columns: 1fr;
+}
+
+.equipment-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+}
+
+.empty-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .equipment-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .equipment-header-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .equipment-container.grid {
+    grid-template-columns: 1fr;
+  }
+}

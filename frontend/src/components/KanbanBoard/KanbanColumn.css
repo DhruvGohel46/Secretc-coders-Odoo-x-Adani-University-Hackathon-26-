@@ -1,0 +1,110 @@
+.kanban-column {
+  background: var(--light-surface);
+  border-radius: 16px;
+  padding: 1rem;
+  border: 1px solid var(--light-border);
+  display: flex;
+  flex-direction: column;
+  min-height: 500px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.dark .kanban-column {
+  background: var(--dark-surface);
+  border-color: var(--dark-border);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.column-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--light-border);
+  border-top: 3px solid;
+}
+
+.dark .column-header {
+  border-bottom-color: var(--dark-border);
+}
+
+.column-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.column-color-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.column-title h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.dark .column-title h3 {
+  color: var(--text-primary-dark);
+}
+
+.column-count {
+  background: var(--light-bg);
+  color: var(--text-secondary);
+  padding: 0.25rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.dark .column-count {
+  background: var(--dark-bg);
+  color: var(--text-secondary-dark);
+}
+
+.add-card-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: all var(--transition-speed);
+}
+
+.add-card-btn:hover {
+  background: var(--light-bg);
+  color: var(--primary-color);
+}
+
+.dark .add-card-btn:hover {
+  background: var(--dark-bg);
+}
+
+.column-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-height: 200px;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+}
+
+.column-content.dragging-over {
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.empty-column {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  color: var(--text-secondary);
+  font-style: italic;
+}
