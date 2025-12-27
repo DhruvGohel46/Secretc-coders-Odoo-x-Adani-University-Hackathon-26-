@@ -1,30 +1,58 @@
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { getAllRequests, updateRequestStatus, assignRequest, scheduleRequest } from '../services/api';
+import { getAllRequests, updateRequestStatus, assignRequest, scheduleRequest, getAllTeams, getAllUsers } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
 import Modal from '../components/Common/Modal';
 import './ListPages.css';
 
 const RequestsList = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
-    teamId: '',
-    technicianId: '',
-    status: '',
-    type: '',
-    overdue: false,
+    teamId: searchParams.get('teamId') || '',
+    technicianId: searchParams.get('technicianId') || '',
+    status: searchParams.get('status') || '',
+    type: searchParams.get('type') || '',
+    overdue: searchParams.get('overdue') === '1',
   });
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [showAssignModal, setShowAssignModal] = useState(false);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [statusData, setStatusData] = useState({ status: '', durationHours: '' });
+  const [scheduleDate, setScheduleDate] = useState('');
+  const [teams, setTeams] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [selectedTechnician, setSelectedTechnician] = useState('');
   const { user, isPrivileged } = useAuth();
 
   useEffect(() => {
     loadRequests();
-  }, [filters]);
+    loadTeams();
+    if (isPrivileged()) {
+      loadUsers();
+    }
+  }, [filters, isPrivileged]);
+
+  const loadTeams = async () => {
+    try {
+      const response = await getAllTeams();
+      setTeams(response.data);
+    } catch (error) {
+      console.error('Error loading teams:', error);
+    }
+  };
+
+  const loadUsers = async () => {
+    try {
+      const response = await getAllUsers();
+      setUsers(response.data);
+    } catch (error) {
+      console.error('Error loading users:', error);
+    }
+  };
 
   const loadRequests = async () => {
     try {
@@ -75,12 +103,17 @@ const RequestsList = () => {
     }
   };
 
-  const handleSchedule = async (scheduledDate) => {
+  const handleSchedule = async () => {
+    if (!scheduleDate) {
+      toast.error('Please select a date and time');
+      return;
+    }
     try {
-      await scheduleRequest(selectedRequest.id, scheduledDate);
-      toast.success('Request scheduled');
+      await scheduleRequest(selectedRequest.id, scheduleDate);
+      toast.success('Request scheduled successfully');
       setShowScheduleModal(false);
       setSelectedRequest(null);
+      setScheduleDate('');
       loadRequests();
     } catch (error) {
       toast.error(error.response?.data?.error || 'Failed to schedule request');
@@ -147,6 +180,32 @@ const RequestsList = () => {
           <option value="CORRECTIVE">Corrective</option>
           <option value="PREVENTIVE">Preventive</option>
         </select>
+
+        {isPrivileged() && (
+          <select
+            value={filters.teamId}
+            onChange={(e) => setFilters({ ...filters, teamId: e.target.value })}
+            className="filter-select"
+          >
+            <option value="">All Teams</option>
+            {teams.map(team => (
+              <option key={team.id} value={team.id}>{team.name}</option>
+            ))}
+          </select>
+        )}
+
+        {isPrivileged() && (
+          <select
+            value={filters.technicianId}
+            onChange={(e) => setFilters({ ...filters, technicianId: e.target.value })}
+            className="filter-select"
+          >
+            <option value="">All Technicians</option>
+            {users.filter(u => u.role === 'TECHNICIAN' || u.role === 'ADMIN' || u.role === 'MANAGER').map(tech => (
+              <option key={tech.id} value={tech.id}>{tech.name}</option>
+            ))}
+          </select>
+        )}
 
         <label className="checkbox-label">
           <input
@@ -232,10 +291,22 @@ const RequestsList = () => {
                           className="btn-sm btn-info"
                           onClick={() => {
                             setSelectedRequest(request);
+                            setScheduleDate(request.scheduledDate ? new Date(request.scheduledDate).toISOString().slice(0, 16) : '');
                             setShowScheduleModal(true);
                           }}
                         >
                           Schedule
+                        </button>
+                      )}
+                      {isPrivileged() && (
+                        <button
+                          className="btn-sm btn-secondary"
+                          onClick={() => {
+                            setSelectedRequest(request);
+                            setShowAssignModal(true);
+                          }}
+                        >
+                          Assign
                         </button>
                       )}
                     </div>
@@ -312,17 +383,20 @@ const RequestsList = () => {
         onClose={() => {
           setShowScheduleModal(false);
           setSelectedRequest(null);
+          setScheduleDate('');
         }}
         title="Schedule Request"
       >
         {selectedRequest && (
           <div>
             <div className="form-group">
-              <label>Scheduled Date</label>
+              <label>Scheduled Date & Time *</label>
               <input
                 type="datetime-local"
-                onChange={(e) => handleSchedule(e.target.value)}
                 className="form-control"
+                value={scheduleDate}
+                onChange={(e) => setScheduleDate(e.target.value)}
+                required
               />
             </div>
             <div className="modal-actions">
@@ -331,9 +405,70 @@ const RequestsList = () => {
                 onClick={() => {
                   setShowScheduleModal(false);
                   setSelectedRequest(null);
+                  setScheduleDate('');
                 }}
               >
                 Cancel
+              </button>
+              <button
+                className="btn-primary"
+                onClick={handleSchedule}
+              >
+                Schedule
+              </button>
+            </div>
+          </div>
+        )}
+      </Modal>
+
+      {/* Assign Modal */}
+      <Modal
+        isOpen={showAssignModal}
+        onClose={() => {
+          setShowAssignModal(false);
+          setSelectedRequest(null);
+          setSelectedTechnician('');
+        }}
+        title="Assign Technician"
+      >
+        {selectedRequest && (
+          <div>
+            <div className="form-group">
+              <label>Select Technician *</label>
+              <select
+                className="form-control"
+                value={selectedTechnician}
+                onChange={(e) => setSelectedTechnician(e.target.value)}
+                required
+              >
+                <option value="">Select a technician</option>
+                {users.filter(u => u.role === 'TECHNICIAN' || u.role === 'ADMIN' || u.role === 'MANAGER').map(tech => (
+                  <option key={tech.id} value={tech.id}>{tech.name} ({tech.role})</option>
+                ))}
+              </select>
+            </div>
+            <div className="modal-actions">
+              <button
+                className="btn-secondary"
+                onClick={() => {
+                  setShowAssignModal(false);
+                  setSelectedRequest(null);
+                  setSelectedTechnician('');
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                className="btn-primary"
+                onClick={() => {
+                  if (selectedTechnician) {
+                    handleAssign(parseInt(selectedTechnician));
+                  } else {
+                    toast.error('Please select a technician');
+                  }
+                }}
+              >
+                Assign
               </button>
             </div>
           </div>
