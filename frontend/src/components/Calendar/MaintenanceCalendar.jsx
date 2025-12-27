@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
@@ -10,7 +10,7 @@ import {
   faChevronLeft,
   faChevronRight
 } from '@fortawesome/free-solid-svg-icons';
-import { getPreventiveRequests, schedulePreventiveMaintenance } from '../../services/api';
+import { getPreventiveRequests } from '../../services/api';
 import { format, isSameDay, startOfMonth, endOfMonth } from 'date-fns';
 import { toast } from 'react-toastify';
 import Modal from '../Common/Modal';
@@ -25,11 +25,7 @@ const MaintenanceCalendar = () => {
   const [showEventDetails, setShowEventDetails] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    fetchCalendarEvents();
-  }, [date]);
-
-  const fetchCalendarEvents = async () => {
+  const fetchCalendarEvents = useCallback(async () => {
     try {
       setLoading(true);
       const start = startOfMonth(date);
@@ -46,7 +42,11 @@ const MaintenanceCalendar = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [date]);
+
+  useEffect(() => {
+    fetchCalendarEvents();
+  }, [date, fetchCalendarEvents]);
 
   const handleDateClick = (value) => {
     setDate(value);

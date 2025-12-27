@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { DragDropContext, Droppable } from 'react-beautiful-dnd';
-import { motion, AnimatePresence } from 'motion/react';
+import { DragDropContext } from 'react-beautiful-dnd';
+import { motion } from 'motion/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faFilter, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { getRequestsByStage, updateRequestStage } from '../../services/api';
 import { toast } from 'react-toastify';
 import KanbanColumn from './KanbanColumn';
-import RequestForm from '../Request/RequestForm';
-import RequestDetail from '../Request/RequestDetail';
 import Button from '../Common/Button';
 import Modal from '../Common/Modal';
 import './KanbanBoard.css';
@@ -20,9 +18,6 @@ const KanbanBoard = () => {
     scrap: { id: 'scrap', title: 'Scrap', color: '#ef4444', requests: [] }
   });
 
-  const [showRequestForm, setShowRequestForm] = useState(false);
-  const [selectedRequest, setSelectedRequest] = useState(null);
-  const [showRequestDetail, setShowRequestDetail] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -153,7 +148,7 @@ const KanbanBoard = () => {
           <Button
             icon={faPlus}
             variant="primary"
-            onClick={() => setShowModal(true)}
+            onClick={() => toast.info('Request form integration coming soon')}
           >
             New Request
           </Button>
@@ -193,16 +188,6 @@ const KanbanBoard = () => {
         </DragDropContext>
       )}
 
-      <AnimatePresence>
-        {showModal && (
-          <Modal
-            title="Create New Request"
-            onClose={() => setShowModal(false)}
-          >
-            <p>Request form will be here</p>
-          </Modal>
-        )}
-      </AnimatePresence>
     </div>
   );
 };

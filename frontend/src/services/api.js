@@ -153,9 +153,8 @@ export const schedulePreventiveMaintenance = (scheduleData) =>
 
 // Get dashboard statistics - calculated from requests and teams
 export const getDashboardStats = async () => {
-  const [requestsRes, teamsRes] = await Promise.all([
-    api.get('/requests'),
-    api.get('/teams')
+  const [requestsRes] = await Promise.all([
+    api.get('/requests')
   ]);
   
   const requests = requestsRes.data;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSave, faTimes, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faSave, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { createTeam, updateTeam, getAllTechnicians } from '../../services/api';
 import { toast } from 'react-toastify';
 import Button from '../Common/Button';

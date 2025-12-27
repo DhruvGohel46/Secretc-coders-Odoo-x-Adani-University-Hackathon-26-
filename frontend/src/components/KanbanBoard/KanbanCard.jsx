@@ -12,7 +12,7 @@ import {
   faTrash,
   faEye
 } from '@fortawesome/free-solid-svg-icons';
-import { format, isPast } from 'date-fns';
+import { format } from 'date-fns';
 import './KanbanCard.css';
 
 const KanbanCard = ({ request, index, columnColor, onEdit, onDelete, onView }) => {

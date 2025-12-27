@@ -1,0 +1,11 @@
+node_modules/
+.next/
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+logs/
+*.log
+.cache/
+.parcel-cache/
+.eslintcache

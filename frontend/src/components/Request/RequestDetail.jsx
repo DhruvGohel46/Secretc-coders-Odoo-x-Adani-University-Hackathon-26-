@@ -8,8 +8,7 @@ import {
   faClock,
   faCheckCircle,
   faExclamationTriangle,
-  faSave,
-  faTrash
+  faSave
 } from '@fortawesome/free-solid-svg-icons';
 import { getRequestById, updateRequest } from '../../services/api';
 import { toast } from 'react-toastify';
@@ -28,7 +27,7 @@ const RequestDetail = ({ requestId, onClose, onUpdate }) => {
 
   useEffect(() => {
     fetchRequest();
-  }, [requestId]);
+  }, [requestId, fetchRequest]);
 
   const fetchRequest = async () => {
     try {
@@ -76,16 +75,6 @@ const RequestDetail = ({ requestId, onClose, onUpdate }) => {
       console.error('Error updating request:', error);
       toast.error(error.response?.data?.error || 'Failed to update request');
     }
-  };
-
-  const getStatusColor = (status) => {
-    const colors = {
-      'NEW': '#3b82f6',
-      'IN_PROGRESS': '#f59e0b',
-      'REPAIRED': '#10b981',
-      'SCRAP': '#ef4444'
-    };
-    return colors[status] || '#6b7280';
   };
 
   const getStatusIcon = (status) => {
@@ -272,7 +261,7 @@ const RequestDetail = ({ requestId, onClose, onUpdate }) => {
           </motion.div>
 
           {/* Duration (for Repaired status) */}
-          {request.status === 'REPAIRED' || editing && formData.status === 'REPAIRED' ? (
+          {(request.status === 'REPAIRED' || (editing && formData.status === 'REPAIRED')) ? (
             <motion.div className="info-section" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
               <h3>Duration</h3>
               <div className="info-card">
