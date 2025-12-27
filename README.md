@@ -21,10 +21,10 @@ It supports **role-based access**, allowing Admins, Technicians, and Users to in
 
 | Name                | Responsibility            |
 | ------------------- | ------------------------- |
-| **Ahad Dangarwala**  | Backend Development       |
+| **Ahad Dangarwala**  | Backend Development & Databse    |
 | **varun Kushwaha** | Backend Development       |
 | **Dhruv Gohil**     | Frontend Development      |
-| **Vishmayraj Zala** | Authentication & Database |
+| **Vishmayraj Zala** | Authentication            |
 
 ---
 
