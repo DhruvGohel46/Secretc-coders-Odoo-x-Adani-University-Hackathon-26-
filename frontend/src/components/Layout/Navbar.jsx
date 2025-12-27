@@ -1,5 +1,6 @@
-import React from 'react';
-import { motion } from 'motion/react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'motion/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   faBars, 
@@ -7,12 +8,22 @@ import {
   faUserCircle, 
   faMoon, 
   faSun,
-  faTools
+  faTools,
+  faSignOutAlt,
+  faCog
 } from '@fortawesome/free-solid-svg-icons';
+import { useAuth } from '../../contexts/AuthContext';
 import './Navbar.css';
 
 const Navbar = ({ toggleSidebar, toggleTheme, darkMode }) => {
-  const [notifications, setNotifications] = React.useState(3);
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const [showUserMenu, setShowUserMenu] = useState(false);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   return (
     <motion.nav 
@@ -59,26 +70,43 @@ const Navbar = ({ toggleSidebar, toggleTheme, darkMode }) => {
           whileTap={{ scale: 0.95 }}
         >
           <FontAwesomeIcon icon={faBell} />
-          {notifications > 0 && (
-            <motion.span 
-              className="badge"
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ type: "spring", stiffness: 500 }}
-            >
-              {notifications}
-            </motion.span>
-          )}
         </motion.div>
 
-        <motion.div 
-          className="user-profile"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <FontAwesomeIcon icon={faUserCircle} />
-          <span>John Doe</span>
-        </motion.div>
+        <div className="user-profile-container">
+          <motion.div 
+            className="user-profile"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setShowUserMenu(!showUserMenu)}
+          >
+            <FontAwesomeIcon icon={faUserCircle} />
+            <span>{user?.name || 'User'}</span>
+            <span className="user-role">{user?.role}</span>
+          </motion.div>
+
+          <AnimatePresence>
+            {showUserMenu && (
+              <motion.div
+                className="user-menu"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2 }}
+              >
+                <div className="user-menu-header">
+                  <div className="user-menu-name">{user?.name}</div>
+                  <div className="user-menu-email">{user?.email}</div>
+                  <div className="user-menu-role">{user?.role}</div>
+                </div>
+                <div className="user-menu-divider"></div>
+                <button className="user-menu-item" onClick={handleLogout}>
+                  <FontAwesomeIcon icon={faSignOutAlt} />
+                  <span>Logout</span>
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
     </motion.nav>
   );

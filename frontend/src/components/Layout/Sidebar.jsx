@@ -7,18 +7,27 @@ import {
   faColumns,
   faBoxes,
   faUsers,
-  faCalendarAlt
+  faCalendarAlt,
+  faBuilding,
+  faUserShield,
+  faClipboardList
 } from '@fortawesome/free-solid-svg-icons';
+import { useAuth } from '../../contexts/AuthContext';
 import './Sidebar.css';
 
 const Sidebar = () => {
+  const { isPrivileged } = useAuth();
+
   const menuItems = [
     { path: '/dashboard', icon: faChartLine, label: 'Dashboard' },
     { path: '/kanban', icon: faColumns, label: 'Kanban Board' },
+    { path: '/requests', icon: faClipboardList, label: 'Requests' },
     { path: '/equipment', icon: faBoxes, label: 'Equipment' },
     { path: '/teams', icon: faUsers, label: 'Teams' },
     { path: '/calendar', icon: faCalendarAlt, label: 'Calendar' },
-  ];
+    { path: '/departments', icon: faBuilding, label: 'Departments', requirePrivileged: true },
+    { path: '/users', icon: faUserShield, label: 'Users', requirePrivileged: true },
+  ].filter(item => !item.requirePrivileged || isPrivileged());
 
   const containerVariants = {
     hidden: { opacity: 0 },

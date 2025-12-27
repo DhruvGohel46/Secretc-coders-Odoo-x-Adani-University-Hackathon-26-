@@ -113,6 +113,10 @@
   text-align: center;
 }
 
+.user-profile-container {
+  position: relative;
+}
+
 .user-profile {
   display: flex;
   align-items: center;
@@ -141,8 +145,119 @@
   color: var(--text-primary);
 }
 
+.user-profile .user-role {
+  font-size: 0.75rem;
+  padding: 0.2rem 0.5rem;
+  background: var(--primary-color);
+  color: white;
+  border-radius: 12px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
 .dark .user-profile span {
   color: var(--text-primary-dark);
+}
+
+.user-menu {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  background: var(--light-surface);
+  border: 1px solid var(--light-border);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  min-width: 250px;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.dark .user-menu {
+  background: var(--dark-surface);
+  border-color: var(--dark-border);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+.user-menu-header {
+  padding: 1rem;
+  border-bottom: 1px solid var(--light-border);
+}
+
+.dark .user-menu-header {
+  border-bottom-color: var(--dark-border);
+}
+
+.user-menu-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.dark .user-menu-name {
+  color: var(--text-primary-dark);
+}
+
+.user-menu-email {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.dark .user-menu-email {
+  color: var(--text-secondary-dark);
+}
+
+.user-menu-role {
+  display: inline-block;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.5rem;
+  background: var(--primary-color);
+  color: white;
+  border-radius: 12px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.user-menu-divider {
+  height: 1px;
+  background: var(--light-border);
+  margin: 0.5rem 0;
+}
+
+.dark .user-menu-divider {
+  background: var(--dark-border);
+}
+
+.user-menu-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  font-size: 0.95rem;
+}
+
+.dark .user-menu-item {
+  color: var(--text-primary-dark);
+}
+
+.user-menu-item:hover {
+  background: var(--light-bg);
+}
+
+.dark .user-menu-item:hover {
+  background: var(--dark-bg);
+}
+
+.user-menu-item svg {
+  font-size: 1rem;
+  color: var(--danger-color);
 }
 
 @media (max-width: 768px) {

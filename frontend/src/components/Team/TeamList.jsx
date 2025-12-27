@@ -9,7 +9,8 @@ import {
   faTrash,
   faUserPlus
 } from '@fortawesome/free-solid-svg-icons';
-import { getAllTeams, deleteTeam } from '../../services/api';
+import { getAllTeams, addTeamMember, removeTeamMember, getAllUsers } from '../../services/api';
+import { useAuth } from '../../contexts/AuthContext';
 import { toast } from 'react-toastify';
 import TeamForm from './TeamForm';
 import Modal from '../Common/Modal';
@@ -21,12 +22,18 @@ const TeamList = () => {
   const [filteredTeams, setFilteredTeams] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const [showMemberModal, setShowMemberModal] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [users, setUsers] = useState([]);
+  const { isPrivileged } = useAuth();
 
   useEffect(() => {
     fetchTeams();
-  }, []);
+    if (isPrivileged()) {
+      fetchUsers();
+    }
+  }, [isPrivileged]);
 
   useEffect(() => {
     const filtered = teams.filter(team =>
@@ -50,15 +57,34 @@ const TeamList = () => {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this team?')) {
+  const fetchUsers = async () => {
+    try {
+      const response = await getAllUsers();
+      setUsers(response.data);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+    }
+  };
+
+  const handleAddMember = async (teamId, userId) => {
+    try {
+      await addTeamMember(teamId, { userId });
+      toast.success('Member added successfully');
+      fetchTeams();
+      setShowMemberModal(false);
+    } catch (error) {
+      toast.error(error.response?.data?.error || 'Failed to add member');
+    }
+  };
+
+  const handleRemoveMember = async (teamId, userId) => {
+    if (window.confirm('Are you sure you want to remove this member?')) {
       try {
-        await deleteTeam(id);
-        toast.success('Team deleted successfully');
+        await removeTeamMember(teamId, userId);
+        toast.success('Member removed successfully');
         fetchTeams();
       } catch (error) {
-        console.error('Error deleting team:', error);
-        toast.error('Failed to delete team');
+        toast.error(error.response?.data?.error || 'Failed to remove member');
       }
     }
   };
@@ -193,14 +219,6 @@ const TeamList = () => {
                       <FontAwesomeIcon icon={faEdit} />
                     </motion.button>
 
-                    <motion.button
-                      onClick={() => handleDelete(team.id)}
-                      whileHover={{ scale: 1.2, rotate: -15 }}
-                      whileTap={{ scale: 0.9 }}
-                      className="delete-btn"
-                    >
-                      <FontAwesomeIcon icon={faTrash} />
-                    </motion.button>
                   </div>
                 </div>
 

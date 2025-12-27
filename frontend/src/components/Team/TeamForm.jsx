@@ -69,16 +69,23 @@ const TeamForm = ({ team, onClose }) => {
 
     try {
       if (team) {
-        await updateTeam(team.id, formData);
-        toast.success('Team updated successfully');
+        // Backend doesn't support team updates, show message
+        toast.info('Team updates are not supported. Please create a new team instead.');
+        onClose();
+        return;
       } else {
-        await createTeam(formData);
+        await createTeam({ name: formData.name });
         toast.success('Team created successfully');
+        // Add members after team creation if any selected
+        if (formData.memberIds.length > 0 && team) {
+          // Note: Members should be added via the team detail page
+          toast.info('Add team members after creating the team');
+        }
       }
       onClose();
     } catch (error) {
       console.error('Error saving team:', error);
-      toast.error('Failed to save team');
+      toast.error(error.response?.data?.error || 'Failed to save team');
     } finally {
       setLoading(false);
     }

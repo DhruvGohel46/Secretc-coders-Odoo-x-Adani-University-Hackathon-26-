@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSave, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { createEquipment, updateEquipment, getAllTeams } from '../../services/api';
+import { createEquipment, updateEquipment, getAllTeams, getAllDepartments } from '../../services/api';
 import { toast } from 'react-toastify';
 import Button from '../Common/Button';
 import './EquipmentForm.css';
@@ -21,12 +21,24 @@ const EquipmentForm = ({ equipment, onClose }) => {
   });
 
   const [teams, setTeams] = useState([]);
+  const [departments, setDepartments] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchTeams();
+    fetchDepartments();
     if (equipment) {
-      setFormData(equipment);
+      setFormData({
+        name: equipment.name || '',
+        serialNumber: equipment.serialNumber || '',
+        department: equipment.department?.id || equipment.departmentId || '',
+        employee: equipment.employee?.id || equipment.employeeId || '',
+        location: equipment.location || '',
+        purchaseDate: equipment.purchaseDate ? equipment.purchaseDate.split('T')[0] : '',
+        warrantyInfo: equipment.warrantyInfo || '',
+        maintenanceTeamId: equipment.maintenanceTeamId || equipment.maintenanceTeam?.id || '',
+        category: equipment.category || ''
+      });
     }
   }, [equipment]);
 
@@ -36,6 +48,15 @@ const EquipmentForm = ({ equipment, onClose }) => {
       setTeams(response.data);
     } catch (error) {
       console.error('Error fetching teams:', error);
+    }
+  };
+
+  const fetchDepartments = async () => {
+    try {
+      const response = await getAllDepartments();
+      setDepartments(response.data);
+    } catch (error) {
+      console.error('Error fetching departments:', error);
     }
   };
 
@@ -49,17 +70,28 @@ const EquipmentForm = ({ equipment, onClose }) => {
     setLoading(true);
 
     try {
+      // Map form data to API format
+      const apiData = {
+        ...formData,
+        departmentId: formData.department ? parseInt(formData.department) : null,
+        employeeId: formData.employee ? parseInt(formData.employee) : null,
+        maintenanceTeamId: formData.maintenanceTeamId ? parseInt(formData.maintenanceTeamId) : null,
+      };
+      // Remove the old keys if they exist
+      delete apiData.department;
+      delete apiData.employee;
+
       if (equipment) {
-        await updateEquipment(equipment.id, formData);
+        await updateEquipment(equipment.id, apiData);
         toast.success('Equipment updated successfully');
       } else {
-        await createEquipment(formData);
+        await createEquipment(apiData);
         toast.success('Equipment created successfully');
       }
       onClose();
     } catch (error) {
       console.error('Error saving equipment:', error);
-      toast.error('Failed to save equipment');
+      toast.error(error.response?.data?.error || 'Failed to save equipment');
     } finally {
       setLoading(false);
     }
@@ -128,10 +160,9 @@ const EquipmentForm = ({ equipment, onClose }) => {
             whileFocus={{ scale: 1.02 }}
           >
             <option value="">Select Department</option>
-            <option value="Production">Production</option>
-            <option value="IT">IT</option>
-            <option value="Maintenance">Maintenance</option>
-            <option value="Operations">Operations</option>
+            {departments.map(dept => (
+              <option key={dept.id} value={dept.id}>{dept.name}</option>
+            ))}
           </motion.select>
         </motion.div>
 

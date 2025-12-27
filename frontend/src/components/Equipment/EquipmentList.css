@@ -70,6 +70,28 @@
   color: white;
 }
 
+.filter-select {
+  padding: 0.5rem 1rem;
+  border: 2px solid var(--light-border);
+  border-radius: 8px;
+  background: var(--light-surface);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dark .filter-select {
+  background: var(--dark-surface);
+  border-color: var(--dark-border);
+  color: var(--text-primary-dark);
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
 .equipment-container {
   display: grid;
   gap: 1.5rem;

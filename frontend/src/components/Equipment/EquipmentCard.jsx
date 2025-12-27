@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   faEdit, 
-  faTrash, 
+  faArchive,
   faTools,
   faCalendarAlt,
   faMapMarkerAlt,
@@ -15,7 +15,7 @@ import { getEquipmentMaintenanceRequests } from '../../services/api';
 import { toast } from 'react-toastify';
 import './EquipmentCard.css';
 
-const EquipmentCard = ({ equipment, index, onEdit, onDelete, viewMode }) => {
+const EquipmentCard = ({ equipment, index, onEdit, onArchive, viewMode }) => {
   const [maintenanceCount, setMaintenanceCount] = useState(equipment.maintenanceCount || 0);
   const [showTooltip, setShowTooltip] = useState(false);
 
@@ -83,12 +83,13 @@ const EquipmentCard = ({ equipment, index, onEdit, onDelete, viewMode }) => {
           </motion.button>
 
           <motion.button
-            onClick={() => onDelete(equipment.id)}
+            onClick={() => onArchive(equipment.id, equipment.isArchived)}
             whileHover={{ scale: 1.2, rotate: -15 }}
             whileTap={{ scale: 0.9 }}
-            className="delete-btn"
+            className="archive-btn"
+            title={equipment.isArchived ? 'Unarchive' : 'Archive'}
           >
-            <FontAwesomeIcon icon={faTrash} />
+            <FontAwesomeIcon icon={faArchive} />
           </motion.button>
         </div>
       </div>
@@ -131,7 +132,7 @@ const EquipmentCard = ({ equipment, index, onEdit, onDelete, viewMode }) => {
           className="department-badge"
           whileHover={{ scale: 1.1 }}
         >
-          {equipment.department}
+          {equipment.department?.name || equipment.department || 'N/A'}
         </motion.span>
 
         <motion.button

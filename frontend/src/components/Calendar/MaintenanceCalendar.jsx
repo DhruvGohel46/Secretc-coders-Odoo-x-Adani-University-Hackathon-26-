@@ -30,10 +30,7 @@ const MaintenanceCalendar = () => {
       setLoading(true);
       const start = startOfMonth(date);
       const end = endOfMonth(date);
-      const response = await getPreventiveRequests(
-        format(start, 'yyyy-MM-dd'),
-        format(end, 'yyyy-MM-dd')
-      );
+      const response = await getPreventiveRequests();
       setEvents(response.data);
       toast.success('Calendar updated');
     } catch (error) {

@@ -21,140 +21,177 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// ==================== AUTHENTICATION APIs ====================
+// Response interceptor for error handling
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
 
-// Register a new user
+// ==================== 1. HEALTH & SYSTEM APIs ====================
+
+// GET /health
+export const checkHealth = () => api.get('/health');
+
+// ==================== 2. AUTHENTICATION & USERS APIs ====================
+
+// POST /auth/register
 export const registerUser = (userData) => 
   api.post('/auth/register', userData);
 
-// Login user
+// POST /auth/login
 export const loginUser = (credentials) => 
   api.post('/auth/login', credentials);
 
-// Get current user info
+// GET /auth/me
 export const getCurrentUser = () => 
   api.get('/auth/me');
 
-// ==================== EQUIPMENT APIs ====================
+// GET /users (ADMIN / MANAGER only)
+export const getAllUsers = () => 
+  api.get('/users');
 
-// Get all equipment with optional filters
-export const getAllEquipment = (filters = {}) => 
-  api.get('/equipment', { params: filters });
+// ==================== 3. DEPARTMENTS APIs ====================
 
-// Get single equipment by ID
-export const getEquipmentById = (id) => 
-  api.get(`/equipment/${id}`);
+// POST /departments
+export const createDepartment = (departmentData) => 
+  api.post('/departments', departmentData);
 
-// Create new equipment
-export const createEquipment = (equipmentData) => 
-  api.post('/equipment', equipmentData);
+// GET /departments
+export const getAllDepartments = () => 
+  api.get('/departments');
 
-// Update existing equipment
-export const updateEquipment = (id, equipmentData) => 
-  api.put(`/equipment/${id}`, equipmentData);
+// ==================== 4. MAINTENANCE TEAMS APIs ====================
 
-// Delete equipment
-export const deleteEquipment = (id) => 
-  api.delete(`/equipment/${id}`);
-
-// Get maintenance requests for specific equipment
-export const getEquipmentMaintenanceRequests = (equipmentId) => 
-  api.get(`/equipment/${equipmentId}/requests`);
-
-// Mark equipment as scrapped
-export const scrapEquipment = (id) => 
-  api.patch(`/equipment/${id}/scrap`);
-
-// ==================== MAINTENANCE TEAM APIs ====================
-
-// Get all maintenance teams
-export const getAllTeams = () => 
-  api.get('/teams');
-
-// Get single team by ID
-export const getTeamById = (id) => 
-  api.get(`/teams/${id}`);
-
-// Create new maintenance team
+// POST /teams
 export const createTeam = (teamData) => 
   api.post('/teams', teamData);
 
-// Update existing team
-export const updateTeam = (id, teamData) => 
-  api.put(`/teams/${id}`, teamData);
+// GET /teams
+export const getAllTeams = () => 
+  api.get('/teams');
 
-// Delete team
-export const deleteTeam = (id) => 
-  api.delete(`/teams/${id}`);
-
-// Add member to team
+// POST /teams/{teamId}/members
 export const addTeamMember = (teamId, memberData) => 
   api.post(`/teams/${teamId}/members`, memberData);
 
-// Remove member from team
-export const removeTeamMember = (teamId, memberId) => 
-  api.delete(`/teams/${teamId}/members/${memberId}`);
+// DELETE /teams/{teamId}/members/{userId}
+export const removeTeamMember = (teamId, userId) => 
+  api.delete(`/teams/${teamId}/members/${userId}`);
 
-// ==================== MAINTENANCE REQUEST APIs ====================
+// GET /teams/{teamId}/validate/{userId}
+export const validateTeamMember = (teamId, userId) => 
+  api.get(`/teams/${teamId}/validate/${userId}`);
 
-// Get all maintenance requests with optional filters
-export const getAllRequests = (filters = {}) => 
-  api.get('/requests', { params: filters });
+// ==================== 5. EQUIPMENT MANAGEMENT APIs ====================
 
-// Get single request by ID
-export const getRequestById = (id) => 
-  api.get(`/requests/${id}`);
+// POST /equipment
+export const createEquipment = (equipmentData) => 
+  api.post('/equipment', equipmentData);
 
-// Create new maintenance request
+// GET /equipment (filters: teamId, archived)
+export const getAllEquipment = (filters = {}) => 
+  api.get('/equipment', { params: filters });
+
+// GET /equipment/{equipmentId}
+export const getEquipmentById = (id) => 
+  api.get(`/equipment/${id}`);
+
+// PATCH /equipment/{equipmentId}
+export const updateEquipment = (id, equipmentData) => 
+  api.patch(`/equipment/${id}`, equipmentData);
+
+// PATCH /equipment/{equipmentId}/archive
+export const archiveEquipment = (id, archived) => 
+  api.patch(`/equipment/${id}/archive`, { archived });
+
+// GET /equipment/{equipmentId}/maintenance-count
+export const getEquipmentMaintenanceCount = (equipmentId) => 
+  api.get(`/equipment/${equipmentId}/maintenance-count`);
+
+// GET /equipment/{equipmentId}/requests
+export const getEquipmentRequests = (equipmentId) => 
+  api.get(`/equipment/${equipmentId}/requests`);
+
+// ==================== 6. MAINTENANCE REQUESTS APIs ====================
+
+// POST /requests
 export const createRequest = (requestData) => 
   api.post('/requests', requestData);
 
-// Update existing request
-export const updateRequest = (id, requestData) => 
-  api.put(`/requests/${id}`, requestData);
+// GET /requests (filters: teamId, technicianId, calendar, overdue)
+export const getAllRequests = (filters = {}) => 
+  api.get('/requests', { params: filters });
 
-// Delete request
-export const deleteRequest = (id) => 
-  api.delete(`/requests/${id}`);
+// GET /requests?calendar=1
+export const getCalendarRequests = () => 
+  api.get('/requests', { params: { calendar: '1' } });
 
-// Update request stage (New, In Progress, Repaired, Scrap)
-export const updateRequestStage = (id, stage) => 
-  api.patch(`/requests/${id}/status`, { status: stage });
-
-// Assign technician to request
-export const assignTechnician = (requestId, technicianId) => 
-  api.patch(`/requests/${requestId}/assign`, { technicianId });
-
-// Update request duration/hours spent
-export const updateRequestDuration = (id, durationHours) => 
-  api.patch(`/requests/${id}/status`, { durationHours });
-
-// Get requests grouped by stage for Kanban board
-export const getRequestsByStage = () => {
-  // Since backend doesn't have a dedicated kanban endpoint, fetch all and process in component
-  return api.get('/requests');
-};
-
-// Get overdue requests
+// GET /requests?overdue=1
 export const getOverdueRequests = () => 
   api.get('/requests', { params: { overdue: '1' } });
 
-// ==================== CALENDAR APIs ====================
+// GET /requests?teamId={id}
+// If no teamId provided, returns all requests (for dashboard stats)
+export const getRequestsByTeam = (teamId) => {
+  const params = teamId ? { teamId } : {};
+  return api.get('/requests', { params });
+};
 
-// Get preventive maintenance requests for calendar view
+// GET /requests?technicianId={id}
+export const getRequestsByTechnician = (technicianId) => 
+  api.get('/requests', { params: { technicianId } });
+
+// PATCH /requests/{requestId}/assign
+export const assignRequest = (requestId, technicianId) => 
+  api.patch(`/requests/${requestId}/assign`, { technicianId });
+
+// PATCH /requests/{requestId}/status
+export const updateRequestStatus = (requestId, status, durationHours) => 
+  api.patch(`/requests/${requestId}/status`, { status, durationHours });
+
+// PATCH /requests/{requestId}/schedule
+export const scheduleRequest = (requestId, scheduledDate) => 
+  api.patch(`/requests/${requestId}/schedule`, { scheduledDate });
+
+// ==================== HELPER FUNCTIONS ====================
+
+// Get preventive requests (alias for calendar requests)
 export const getPreventiveRequests = (startDate, endDate) => 
-  api.get('/requests', { params: { calendar: '1' } });
+  getCalendarRequests();
 
-// Schedule new preventive maintenance
-export const schedulePreventiveMaintenance = (scheduleData) => 
-  api.patch(`/requests/${scheduleData.id}/schedule`, { scheduledDate: scheduleData.scheduledDate });
+// Get equipment maintenance requests (alias)
+export const getEquipmentMaintenanceRequests = (equipmentId) => 
+  getEquipmentRequests(equipmentId);
 
-// ==================== DASHBOARD & REPORTS APIs ====================
+// Get requests by stage (for Kanban board)
+export const getRequestsByStage = () => 
+  getAllRequests();
 
-// Get dashboard statistics - calculated from requests and teams
+// Update request stage (alias for updateRequestStatus)
+export const updateRequestStage = (requestId, status) => 
+  updateRequestStatus(requestId, status);
+
+// Get all technicians (filter users by role)
+export const getAllTechnicians = async () => {
+  const res = await getAllUsers();
+  const technicians = res.data.filter(user => 
+    user.role === 'TECHNICIAN' || user.role === 'ADMIN' || user.role === 'MANAGER'
+  );
+  return { data: technicians };
+};
+
+// Get dashboard statistics
 export const getDashboardStats = async () => {
-  const [requestsRes] = await Promise.all([
-    api.get('/requests')
+  const [requestsRes, teamsRes] = await Promise.all([
+    getAllRequests(),
+    getAllTeams()
   ]);
   
   const requests = requestsRes.data;
@@ -162,106 +199,18 @@ export const getDashboardStats = async () => {
     totalRequests: requests.length,
     inProgress: requests.filter(r => r.status === 'IN_PROGRESS').length,
     completed: requests.filter(r => r.status === 'REPAIRED').length,
-    overdue: requests.filter(r => r.isOverdue).length
+    overdue: requests.filter(r => r.isOverdue).length,
+    totalTeams: teamsRes.data.length
   };
   
   return { data: stats };
 };
 
-// Get requests count by team
-export const getRequestsByTeam = async () => {
-  const res = await api.get('/requests');
-  const requests = res.data;
-  
-  const teamMap = {};
-  requests.forEach(req => {
-    if (req.team) {
-      teamMap[req.team.id] = (teamMap[req.team.id] || 0) + 1;
-    }
-  });
-  
-  const result = Object.entries(teamMap).map(([teamId, count]) => ({
-    teamId: parseInt(teamId),
-    count
-  }));
-  
-  return { data: result };
+// Update team (Note: Backend doesn't have PATCH /teams/:id, so this is a placeholder)
+// Teams can only be created, not updated via API
+export const updateTeam = async (teamId, teamData) => {
+  // Since backend doesn't support team updates, we'll just return an error
+  throw new Error('Team updates are not supported by the backend API');
 };
-
-// Get requests count by equipment category
-export const getRequestsByCategory = async () => {
-  const res = await api.get('/requests');
-  const requests = res.data;
-  
-  const categoryMap = {};
-  requests.forEach(req => {
-    const category = req.equipmentCategory || 'Unknown';
-    categoryMap[category] = (categoryMap[category] || 0) + 1;
-  });
-  
-  const result = Object.entries(categoryMap).map(([category, count]) => ({
-    category,
-    count
-  }));
-  
-  return { data: result };
-};
-
-// Get maintenance history
-export const getMaintenanceHistory = (filters = {}) => 
-  api.get('/requests', { params: filters });
-
-// ==================== USER/TECHNICIAN APIs ====================
-
-// Get all technicians - using users endpoint
-export const getAllTechnicians = async () => {
-  const res = await api.get('/users');
-  // Filter for technicians only if role field exists
-  return { data: res.data };
-};
-
-// Get technician by ID
-export const getTechnicianById = (id) => 
-  api.get(`/users/${id}`);
-
-// Get technician's assigned requests
-export const getTechnicianRequests = (technicianId) => 
-  api.get('/requests', { params: { technicianId } });
-
-// ==================== SEARCH & FILTER APIs ====================
-
-// Search equipment by name or serial number
-export const searchEquipment = async (query) => {
-  const res = await api.get('/equipment');
-  const allEquipment = res.data;
-  
-  const filtered = allEquipment.filter(eq => 
-    eq.name?.toLowerCase().includes(query.toLowerCase()) ||
-    eq.serialNumber?.toLowerCase().includes(query.toLowerCase())
-  );
-  
-  return { data: filtered };
-};
-
-// Search requests by subject or equipment
-export const searchRequests = async (query) => {
-  const res = await api.get('/requests');
-  const allRequests = res.data;
-  
-  const filtered = allRequests.filter(req =>
-    req.subject?.toLowerCase().includes(query.toLowerCase()) ||
-    req.equipment?.name?.toLowerCase().includes(query.toLowerCase())
-  );
-  
-  return { data: filtered };
-};
-
-// Filter equipment by department
-export const getEquipmentByDepartment = (departmentId) => 
-  api.get('/equipment', { params: { departmentId } });
-
-// Filter equipment by employee
-export const getEquipmentByEmployee = (employeeId) => 
-  api.get('/equipment', { params: { employeeId } });
 
 export default api;

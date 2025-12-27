@@ -8,7 +8,7 @@ import {
   faTable,
   faThLarge
 } from '@fortawesome/free-solid-svg-icons';
-import { getAllEquipment, deleteEquipment } from '../../services/api';
+import { getAllEquipment, archiveEquipment, getAllTeams } from '../../services/api';
 import { toast } from 'react-toastify';
 import EquipmentCard from './EquipmentCard';
 import EquipmentForm from './EquipmentForm';
@@ -24,10 +24,17 @@ const EquipmentList = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedEquipment, setSelectedEquipment] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [filters, setFilters] = useState({ teamId: '', archived: '0' });
+  const [teams, setTeams] = useState([]);
+
+  useEffect(() => {
+    fetchTeams();
+    fetchEquipment();
+  }, []);
 
   useEffect(() => {
     fetchEquipment();
-  }, []);
+  }, [filters]);
 
   useEffect(() => {
     const filtered = equipment.filter(item =>
@@ -38,13 +45,25 @@ const EquipmentList = () => {
     setFilteredEquipment(filtered);
   }, [searchTerm, equipment]);
 
+  const fetchTeams = async () => {
+    try {
+      const response = await getAllTeams();
+      setTeams(response.data);
+    } catch (error) {
+      console.error('Error fetching teams:', error);
+    }
+  };
+
   const fetchEquipment = async () => {
     try {
       setLoading(true);
-      const response = await getAllEquipment();
+      const params = {};
+      if (filters.teamId) params.teamId = filters.teamId;
+      if (filters.archived) params.archived = filters.archived;
+      
+      const response = await getAllEquipment(params);
       setEquipment(response.data);
       setFilteredEquipment(response.data);
-      toast.success('Equipment loaded successfully');
     } catch (error) {
       console.error('Error fetching equipment:', error);
       toast.error('Failed to load equipment');
@@ -53,15 +72,16 @@ const EquipmentList = () => {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this equipment?')) {
+  const handleArchive = async (id, isArchived) => {
+    const action = isArchived ? 'unarchive' : 'archive';
+    if (window.confirm(`Are you sure you want to ${action} this equipment?`)) {
       try {
-        await deleteEquipment(id);
-        toast.success('Equipment deleted successfully');
+        await archiveEquipment(id, !isArchived);
+        toast.success(`Equipment ${action}d successfully`);
         fetchEquipment();
       } catch (error) {
-        console.error('Error deleting equipment:', error);
-        toast.error('Failed to delete equipment');
+        console.error('Error archiving equipment:', error);
+        toast.error(`Failed to ${action} equipment`);
       }
     }
   };
@@ -132,13 +152,26 @@ const EquipmentList = () => {
             </motion.button>
           </div>
 
-          <Button
-            icon={faFilter}
-            variant="secondary"
-            onClick={() => toast.info('Filter feature coming soon')}
+          <select
+            value={filters.teamId}
+            onChange={(e) => setFilters({ ...filters, teamId: e.target.value })}
+            className="filter-select"
           >
-            Filter
-          </Button>
+            <option value="">All Teams</option>
+            {teams.map(team => (
+              <option key={team.id} value={team.id}>{team.name}</option>
+            ))}
+          </select>
+
+          <select
+            value={filters.archived}
+            onChange={(e) => setFilters({ ...filters, archived: e.target.value })}
+            className="filter-select"
+          >
+            <option value="0">Active Only</option>
+            <option value="1">Archived Only</option>
+            <option value="">All</option>
+          </select>
 
           <Button
             icon={faPlus}
@@ -177,7 +210,7 @@ const EquipmentList = () => {
                 equipment={item}
                 index={index}
                 onEdit={handleEdit}
-                onDelete={handleDelete}
+                onArchive={handleArchive}
                 viewMode={viewMode}
               />
             ))}

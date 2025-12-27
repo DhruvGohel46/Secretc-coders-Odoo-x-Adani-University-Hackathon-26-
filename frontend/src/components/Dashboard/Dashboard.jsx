@@ -8,7 +8,7 @@ import {
   faExclamationTriangle,
   faChartBar
 } from '@fortawesome/free-solid-svg-icons';
-import { getDashboardStats, getRequestsByTeam, getOverdueRequests } from '../../services/api';
+import { getDashboardStats, getAllTeams, getOverdueRequests } from '../../services/api';
 import { toast } from 'react-toastify';
 import StatsCard from './StatsCard';
 import './Dashboard.css';
@@ -32,7 +32,7 @@ const Dashboard = () => {
       setLoading(true);
       const [statsRes, teamRes, overdueRes] = await Promise.all([
         getDashboardStats(),
-        getRequestsByTeam(),
+        getAllTeams(),
         getOverdueRequests()
       ]);
 
