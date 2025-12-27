@@ -254,7 +254,7 @@ npm start
 ## 🎯 Final Note
 
 This project follows **industry-level backend architecture**, clean folder structure, and scalable design.
-It is suitable for real-world production use with future extensibility.
+It is suitable for real-world enterprise deployment with future extensibility such as notifications, SLA tracking, and analytics.
 
 
 ## 👨‍💻 Team
