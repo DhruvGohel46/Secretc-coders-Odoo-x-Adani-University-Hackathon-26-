@@ -15,9 +15,9 @@ import {
 import { format, isPast } from 'date-fns';
 import './KanbanCard.css';
 
-const KanbanCard = ({ request, index, columnColor }) => {
+const KanbanCard = ({ request, index, columnColor, onEdit, onDelete, onView }) => {
   const [showActions, setShowActions] = useState(false);
-  const isOverdue = request.scheduledDate && isPast(new Date(request.scheduledDate)) && request.stage !== 'repaired';
+  const isOverdue = request.isOverdue === true;
 
   const cardVariants = {
     hidden: { opacity: 0, scale: 0.8, y: 20 },
@@ -94,13 +94,13 @@ const KanbanCard = ({ request, index, columnColor }) => {
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.2 }}
               >
-                <motion.button whileHover={{ x: 5 }} whileTap={{ scale: 0.95 }}>
+                <motion.button onClick={() => onView?.(request)} whileHover={{ x: 5 }} whileTap={{ scale: 0.95 }}>
                   <FontAwesomeIcon icon={faEye} /> View
                 </motion.button>
-                <motion.button whileHover={{ x: 5 }} whileTap={{ scale: 0.95 }}>
+                <motion.button onClick={() => onEdit?.(request)} whileHover={{ x: 5 }} whileTap={{ scale: 0.95 }}>
                   <FontAwesomeIcon icon={faEdit} /> Edit
                 </motion.button>
-                <motion.button whileHover={{ x: 5 }} whileTap={{ scale: 0.95 }} className="delete">
+                <motion.button onClick={() => onDelete?.(request.id)} whileHover={{ x: 5 }} whileTap={{ scale: 0.95 }} className="delete">
                   <FontAwesomeIcon icon={faTrash} /> Delete
                 </motion.button>
               </motion.div>
@@ -126,19 +126,22 @@ const KanbanCard = ({ request, index, columnColor }) => {
               </motion.div>
             )}
 
-            {request.assignedTo && (
+            {request.technician && (
               <motion.div 
-                className="card-assignee"
+                className="card-technician"
                 whileHover={{ scale: 1.05 }}
               >
                 <motion.div 
-                  className="assignee-avatar"
+                  className="tech-avatar"
                   whileHover={{ rotate: 360 }}
                   transition={{ duration: 0.5 }}
                 >
                   <FontAwesomeIcon icon={faUser} />
                 </motion.div>
-                <span>{request.assignedTo.name}</span>
+                <div className="tech-info">
+                  <div className="tech-name">{request.technician.name}</div>
+                  <div className="tech-role">Technician</div>
+                </div>
               </motion.div>
             )}
           </div>
@@ -148,15 +151,15 @@ const KanbanCard = ({ request, index, columnColor }) => {
               className="request-type"
               whileHover={{ scale: 1.1 }}
             >
-              {request.type}
+              {request.type === 'PREVENTIVE' ? '📅' : '🔧'}
             </motion.span>
 
-            {request.duration && (
+            {request.durationHours && (
               <motion.span 
                 className="duration"
                 whileHover={{ scale: 1.1 }}
               >
-                {request.duration}h
+                <FontAwesomeIcon icon={faClock} /> {request.durationHours}h
               </motion.span>
             )}
           </div>

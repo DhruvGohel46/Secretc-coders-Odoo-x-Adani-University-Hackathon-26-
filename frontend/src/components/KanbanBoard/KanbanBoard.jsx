@@ -3,10 +3,11 @@ import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { motion, AnimatePresence } from 'motion/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faFilter, faSearch } from '@fortawesome/free-solid-svg-icons';
-import { getRequestsByStage, updateRequestStage, createRequest } from '../../services/api';
+import { getRequestsByStage, updateRequestStage } from '../../services/api';
 import { toast } from 'react-toastify';
 import KanbanColumn from './KanbanColumn';
-import Modal from '../Common/Modal';
+import RequestForm from '../Request/RequestForm';
+import RequestDetail from '../Request/RequestDetail';
 import Button from '../Common/Button';
 import './KanbanBoard.css';
 
@@ -18,7 +19,9 @@ const KanbanBoard = () => {
     scrap: { id: 'scrap', title: 'Scrap', color: '#ef4444', requests: [] }
   });
 
-  const [showModal, setShowModal] = useState(false);
+  const [showRequestForm, setShowRequestForm] = useState(false);
+  const [selectedRequest, setSelectedRequest] = useState(null);
+  const [showRequestDetail, setShowRequestDetail] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -30,13 +33,28 @@ const KanbanBoard = () => {
     try {
       setLoading(true);
       const response = await getRequestsByStage();
-      const groupedData = response.data;
+      const allRequests = response.data;
+
+      // Group requests by status
+      const statusMap = {
+        new: 'NEW',
+        inProgress: 'IN_PROGRESS',
+        repaired: 'REPAIRED',
+        scrap: 'SCRAP'
+      };
+
+      const groupedData = {
+        new: allRequests.filter(r => r.status === statusMap.new),
+        inProgress: allRequests.filter(r => r.status === statusMap.inProgress),
+        repaired: allRequests.filter(r => r.status === statusMap.repaired),
+        scrap: allRequests.filter(r => r.status === statusMap.scrap)
+      };
 
       setColumns(prev => ({
-        new: { ...prev.new, requests: groupedData.new || [] },
-        inProgress: { ...prev.inProgress, requests: groupedData.inProgress || [] },
-        repaired: { ...prev.repaired, requests: groupedData.repaired || [] },
-        scrap: { ...prev.scrap, requests: groupedData.scrap || [] }
+        new: { ...prev.new, requests: groupedData.new },
+        inProgress: { ...prev.inProgress, requests: groupedData.inProgress },
+        repaired: { ...prev.repaired, requests: groupedData.repaired },
+        scrap: { ...prev.scrap, requests: groupedData.scrap }
       }));
 
       toast.success('Kanban board updated');
@@ -71,7 +89,16 @@ const KanbanBoard = () => {
     });
 
     try {
-      await updateRequestStage(draggableId, destination.droppableId);
+      // Convert status ID to proper backend status value
+      const statusMap = {
+        new: 'NEW',
+        inProgress: 'IN_PROGRESS',
+        repaired: 'REPAIRED',
+        scrap: 'SCRAP'
+      };
+      const backendStatus = statusMap[destination.droppableId];
+      
+      await updateRequestStage(draggableId, backendStatus);
       toast.success(`Request moved to ${destColumn.title}`, {
         position: "bottom-right",
         autoClose: 2000,

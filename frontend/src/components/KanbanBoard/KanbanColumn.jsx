@@ -6,7 +6,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import KanbanCard from './KanbanCard';
 import './KanbanColumn.css';
 
-const KanbanColumn = ({ column, index, searchTerm }) => {
+const KanbanColumn = ({ column, index, searchTerm, onAddRequest, onViewRequest, onEditRequest, onDeleteRequest }) => {
   const filteredRequests = column.requests.filter(request =>
     request.subject?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     request.equipment?.name?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -56,6 +56,7 @@ const KanbanColumn = ({ column, index, searchTerm }) => {
 
         <motion.button
           className="add-card-btn"
+          onClick={onAddRequest}
           whileHover={{ scale: 1.1, rotate: 90 }}
           whileTap={{ scale: 0.9 }}
           transition={{ type: "spring", stiffness: 400 }}
@@ -83,6 +84,9 @@ const KanbanColumn = ({ column, index, searchTerm }) => {
                 request={request}
                 index={index}
                 columnColor={column.color}
+                onView={onViewRequest}
+                onEdit={onEditRequest}
+                onDelete={onDeleteRequest}
               />
             ))}
             {provided.placeholder}
