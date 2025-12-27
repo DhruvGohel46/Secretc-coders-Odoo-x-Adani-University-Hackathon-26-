@@ -63,12 +63,7 @@ echo.
 echo Backend:  http://localhost:4000
 echo Frontend: http://localhost:9090
 echo.
-echo Waiting for frontend to be ready...
-timeout /t 10 /nobreak >nul
-
-REM Open frontend in default browser
-start "" "http://localhost:9090"
-
+echo Open http://localhost:9090 in your browser
 echo.
 echo Press any key to close this window...
 pause > nul
