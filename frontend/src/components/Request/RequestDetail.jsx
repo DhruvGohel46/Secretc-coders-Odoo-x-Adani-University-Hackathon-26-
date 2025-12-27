@@ -125,9 +125,9 @@ const RequestDetail = ({ requestId, onClose, onUpdate }) => {
     >
       <motion.div
         className="request-detail"
-        initial={{ scale: 0.9, y: 20 }}
-        animate={{ scale: 1, y: 0 }}
-        exit={{ scale: 0.9, y: 20 }}
+        initial={{ scale: 0.95 }}
+        animate={{ scale: 1 }}
+        exit={{ scale: 0.95 }}
         onClick={e => e.stopPropagation()}
       >
         <div className="detail-header">
@@ -142,7 +142,7 @@ const RequestDetail = ({ requestId, onClose, onUpdate }) => {
 
         <div className="detail-content">
           {/* Status Flow */}
-          <motion.div className="status-section" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+          <motion.div className="status-section" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <h3>Status Workflow</h3>
             <div className="status-flow">
               {statusFlow.map((status, index) => (
@@ -165,7 +165,7 @@ const RequestDetail = ({ requestId, onClose, onUpdate }) => {
           </motion.div>
 
           {/* Equipment Info */}
-          <motion.div className="info-section" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+          <motion.div className="info-section" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}>
             <h3>Equipment</h3>
             <div className="info-card">
               <div className="info-row">
@@ -191,7 +191,7 @@ const RequestDetail = ({ requestId, onClose, onUpdate }) => {
           </motion.div>
 
           {/* Team & Technician Info */}
-          <motion.div className="info-section" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+          <motion.div className="info-section" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
             <h3>Team & Technician</h3>
             <div className="info-card">
               <div className="info-row">
@@ -226,7 +226,7 @@ const RequestDetail = ({ requestId, onClose, onUpdate }) => {
           </motion.div>
 
           {/* Request Details */}
-          <motion.div className="info-section" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+          <motion.div className="info-section" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
             <h3>Request Details</h3>
             <div className="info-card">
               <div className="info-row">
@@ -262,7 +262,7 @@ const RequestDetail = ({ requestId, onClose, onUpdate }) => {
 
           {/* Duration (for Repaired status) */}
           {(request.status === 'REPAIRED' || (editing && formData.status === 'REPAIRED')) ? (
-            <motion.div className="info-section" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
+            <motion.div className="info-section" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
               <h3>Duration</h3>
               <div className="info-card">
                 {editing ? (
@@ -290,7 +290,7 @@ const RequestDetail = ({ requestId, onClose, onUpdate }) => {
           ) : null}
         </div>
 
-        <motion.div className="detail-actions" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
+        <motion.div className="detail-actions" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
           {!editing ? (
             <>
               <button className="edit-btn" onClick={() => setEditing(true)}>

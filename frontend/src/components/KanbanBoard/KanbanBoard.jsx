@@ -115,8 +115,8 @@ const KanbanBoard = () => {
     <div className="kanban-board">
       <motion.div 
         className="kanban-header"
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
       >
         <div className="kanban-header-left">
           <h1>Maintenance Requests</h1>

@@ -127,7 +127,7 @@ const RequestForm = ({ onClose, onSuccess }) => {
 
         <div className="form-content">
           {/* Request Type */}
-          <motion.div className="form-group" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+          <motion.div className="form-group" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <label htmlFor="type">Request Type *</label>
             <div className="type-selector">
               <button
@@ -152,7 +152,7 @@ const RequestForm = ({ onClose, onSuccess }) => {
           </motion.div>
 
           {/* Equipment Selection */}
-          <motion.div className="form-group" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+          <motion.div className="form-group" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}>
             <label htmlFor="equipment">Equipment *</label>
             <div className="equipment-selector">
               <input
@@ -165,8 +165,8 @@ const RequestForm = ({ onClose, onSuccess }) => {
               {searchTerm && filteredEquipment.length > 0 && (
                 <motion.div
                   className="equipment-dropdown"
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
                 >
                   {filteredEquipment.slice(0, 5).map(eq => (
                     <motion.div
@@ -234,8 +234,8 @@ const RequestForm = ({ onClose, onSuccess }) => {
           {formData.type === 'PREVENTIVE' && (
             <motion.div
               className="form-group"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
             >
               <label htmlFor="scheduledDate">Scheduled Date *</label>
@@ -254,7 +254,7 @@ const RequestForm = ({ onClose, onSuccess }) => {
           )}
         </div>
 
-        <motion.div className="form-actions" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
+        <motion.div className="form-actions" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
           <button
             type="submit"
             className="submit-btn"

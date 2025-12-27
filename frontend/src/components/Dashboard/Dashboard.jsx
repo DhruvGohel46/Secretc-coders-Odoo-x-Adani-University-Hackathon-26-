@@ -110,8 +110,8 @@ const Dashboard = () => {
     <div className="dashboard">
       <motion.div
         className="dashboard-header"
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
         transition={{ delay: 0.1 }}
       >
         <h1>Dashboard Overview</h1>
@@ -131,8 +131,8 @@ const Dashboard = () => {
 
       <motion.div 
         className="charts-section"
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
         transition={{ delay: 0.4 }}
       >
         <div className="chart-card">
@@ -144,10 +144,10 @@ const Dashboard = () => {
               <motion.div
                 key={team.id}
                 className="team-stat-item"
-                initial={{ x: -20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 + index * 0.1 }}
-                whileHover={{ scale: 1.02, x: 5 }}
+                whileHover={{ scale: 1.02 }}
               >
                 <div className="team-info">
                   <span className="team-name">{team.name}</span>
