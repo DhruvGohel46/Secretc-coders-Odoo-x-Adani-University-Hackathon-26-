@@ -41,7 +41,7 @@
 .sidebar-link:hover {
   background: var(--light-bg);
   color: var(--primary-color);
-  transform: translateX(5px);
+  transform: translateX(4px);
 }
 
 .dark .sidebar-link:hover {
