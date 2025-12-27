@@ -172,32 +172,71 @@ Database (PostgreSQL via Prisma)
 
 ---
 
-## 📡 API Endpoints (Summary)
 
-### Auth
+# 📘 **API ENDPOINTS – CATEGORIZED STRUCTURE**
 
-* `POST /auth/register`
-* `POST /auth/login`
+---
 
-### Equipment
+## 🔐 **1. Authentication & User Management**
 
-* `POST /equipment`
-* `GET /equipment`
-* `GET /equipment/:id`
+| Method | Endpoint         | Description                |
+| ------ | ---------------- | -------------------------- |
+| POST   | `/auth/register` | Register new user          |
+| POST   | `/auth/login`    | Login user                 |
+| GET    | `/auth/me`       | Get logged-in user details |
 
-### Maintenance
+---
 
-* `POST /maintenance`
-* `GET /maintenance`
-* `PUT /maintenance/schedule`
-* `PUT /maintenance/start/:id`
-* `PUT /maintenance/complete/:id`
+## 🏢 **2. Department Management**
 
-### Team
+| Method | Endpoint       | Description             |
+| ------ | -------------- | ----------------------- |
+| POST   | `/departments` | Create a new department |
 
-* `POST /team`
-* `GET /team`
-* `POST /team/assign`
+---
+
+## 👥 **3. Team Management**
+
+| Method | Endpoint                      | Description                     |
+| ------ | ----------------------------- | ------------------------------- |
+| POST   | `/teams`                      | Create a new team               |
+| GET    | `/teams`                      | Get all teams                   |
+| POST   | `/teams/:id/members`          | Assign technician to team       |
+| GET    | `/teams/:id/validate/:userId` | Check if user belongs to a team |
+
+---
+
+## 🧰 **4. Equipment Management**
+
+| Method | Endpoint                  | Description                           |
+| ------ | ------------------------- | ------------------------------------- |
+| POST   | `/equipment`              | Add new equipment                     |
+| GET    | `/equipment`              | Get all equipment                     |
+| GET    | `/equipment/:id`          | Get single equipment                  |
+| PATCH  | `/equipment/:id`          | Update equipment                      |
+| PATCH  | `/equipment/:id/archive`  | Archive equipment                     |
+| GET    | `/equipment/:id/requests` | Get maintenance requests of equipment |
+
+---
+
+## 🛠️ **5. Maintenance Requests**
+
+| Method | Endpoint                 | Description                  |
+| ------ | ------------------------ | ---------------------------- |
+| POST   | `/requests`              | Create maintenance request   |
+| GET    | `/requests`              | Get all maintenance requests |
+| PATCH  | `/requests/:id/assign`   | Assign technician            |
+| PATCH  | `/requests/:id/status`   | Update maintenance status    |
+| PATCH  | `/requests/:id/schedule` | Schedule maintenance         |
+
+---
+
+## 🩺 **6. System / Health**
+
+| Method | Endpoint  | Description      |
+| ------ | --------- | ---------------- |
+| GET    | `/health` | API health check |
+
 
 ---
 
