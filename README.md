@@ -256,4 +256,10 @@ npm start
 This project follows **industry-level backend architecture**, clean folder structure, and scalable design.
 It is suitable for real-world production use with future extensibility.
 
+
+## 👨‍💻 Team
+
+Built with ❤️ for Odoo × Adani University Hackathon
+Focused on real-world industrial maintenance problems
+
 ---
