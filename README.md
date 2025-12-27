@@ -7,256 +7,214 @@
 <img width="1919" height="1016" alt="image" src="https://github.com/user-attachments/assets/e845d3ee-554a-4494-8e05-bde197be948b" /><img width="1919" height="956" alt="image" src="https://github.com/user-attachments/assets/1b8c4901-e644-4ea8-89fa-f656946d5e49" />
 <img width="1919" height="1014" alt="image" src="https://github.com/user-attachments/assets/67d319f1-2967-4949-80b7-355afdc873ca" />
 
-📌 Overview
+# 📘 **Maintenance Management System**
 
-This project is a full-stack Maintenance Management System designed to help organizations track equipment, manage maintenance teams, and handle maintenance requests (both corrective and preventive).
-The system connects Equipment → Maintenance Teams → Technicians → Requests in a seamless workflow, inspired by Odoo-style enterprise modules.
+## 📌 Project Overview
 
-🎯 Key Objectives
+This project is a **full-stack Maintenance Management System** designed to manage equipment, technicians, and maintenance workflows inside an organization.
 
-Centralized asset (equipment) tracking
+It supports **role-based access**, allowing Admins, Technicians, and Users to interact with the system according to their responsibilities.
 
-Structured maintenance team & technician assignment
+---
 
-Corrective (breakdown) and preventive (scheduled) maintenance workflows
+## 👥 Team Members
 
-Calendar-based preventive maintenance planning
+| Name                | Responsibility            |
+| ------------------- | ------------------------- |
+| **Ahad Dangarwala**  | Backend Development       |
+| **varun Kushwaha** | Backend Development       |
+| **Dhruv Gohil**     | Frontend Development      |
+| **Vishmayraj Zala** | Authentication & Database |
 
-Kanban-style request lifecycle management
+---
 
-Role-based access control (Admin / Manager / Technician)
+## 🛠️ Tech Stack
 
-🧱 Tech Stack
-Backend
+### Backend
 
-Node.js + Express
+* **Node.js**
+* **Express.js**
+* **PostgreSQL**
+* **Prisma ORM**
+* **JWT Authentication**
+* **bcrypt**
 
-PostgreSQL
+### Frontend
 
-Prisma ORM
+* **React.js**
+* **Axios**
+* **Tailwind CSS**
 
-JWT Authentication
+---
 
-Cron Jobs (Overdue Detection)
+## 🧠 System Architecture
 
-Frontend
+```
+Client (React)
+     |
+     v
+API Layer (Express)
+     |
+     v
+Database (PostgreSQL via Prisma)
+```
 
-React.js
+---
 
-Axios
+## 🔐 Authentication & Authorization
 
-React Router
+* Secure login using **JWT**
+* Passwords hashed using **bcrypt**
+* Role-based access control:
 
-Calendar & Drag-Drop UI
+  * ADMIN
+  * TECHNICIAN
+  * USER
 
-Kanban Board
+---
 
-Tools
+## 🧩 Core Modules
 
-Postman – API testing
+### 1️⃣ User Management
 
-Prisma Studio – Database visualization
+* Register / Login
+* Role-based access
+* Secure authentication
 
-pgAdmin / psql – DB inspection
+---
 
-👥 User Roles
-Role	Permissions
-ADMIN	Full access, user creation, master data
-MANAGER	Team & maintenance planning
-TECHNICIAN	Assigned requests execution
-🧩 Core Modules
-1️⃣ Equipment Management
+### 2️⃣ Team Management
 
-Track assets by department or employee
+* Admin can create teams
+* Assign technicians to teams
+* Each technician belongs to only one team
 
-Assign maintenance team & default technician
+---
 
-Archive / Scrap equipment
+### 3️⃣ Equipment Management
 
-View maintenance history per equipment
+* Admin can add/edit/delete equipment
+* Each equipment belongs to a specific team
+* Equipment status tracking
 
-Key Fields
+---
 
-Name, Serial Number
+### 4️⃣ Maintenance Management
 
-Category
+* Users raise maintenance requests
+* Admin assigns maintenance to teams
+* Technicians view and update assigned work
+* Status lifecycle:
 
-Location
+  ```
+  OPEN → SCHEDULED → IN_PROGRESS → COMPLETED
+  ```
 
-Purchase & Warranty Info
+---
 
-Usability status
+### 5️⃣ Dashboard System
 
-2️⃣ Maintenance Teams
+* Admin dashboard:
 
-Create specialized teams (Mechanical, Electrical, IT)
+  * Total equipment
+  * Active maintenance
+  * Team workload
+* Technician dashboard:
 
-Assign technicians to teams
+  * Assigned tasks
+  * Status updates
 
-Validate technician-team relationship
+---
 
-3️⃣ Maintenance Requests
-Types
+## 🗂 Database Schema Overview
 
-Corrective → Unplanned breakdown repairs
+### User
 
-Preventive → Scheduled routine checkups
+* id
+* name
+* email
+* password
+* role (ADMIN / TECHNICIAN / USER)
+* teamId
 
-Lifecycle
-NEW → IN_PROGRESS → REPAIRED → (optional) SCRAP
+### Team
 
-Features
+* id
+* name
 
-Auto-assign team & technician from equipment
+### Equipment
 
-Duration tracking
+* id
+* name
+* serialNumber
+* location
+* teamId
+* status
 
-Overdue detection
+### Maintenance
 
-Calendar scheduling
+* id
+* equipmentId
+* reportedBy
+* assignedTeam
+* status
+* scheduledDate
+* completedAt
 
-🔄 Business Flows
-🔧 Corrective Maintenance (Breakdown)
+---
 
-Any user creates request
+## 🔒 Security Features
 
-Equipment auto-fills team & technician
+* Encrypted passwords
+* JWT-based authentication
+* Role-based route protection
+* Secure environment variables
 
-Status starts as NEW
+---
 
-Technician assigns & moves to IN_PROGRESS
+## 📡 API Endpoints (Summary)
 
-Work completed → REPAIRED
+### Auth
 
-Duration recorded
+* `POST /auth/register`
+* `POST /auth/login`
 
-📅 Preventive Maintenance (Routine)
+### Equipment
 
-Manager creates preventive request
+* `POST /equipment`
+* `GET /equipment`
+* `GET /equipment/:id`
 
-Scheduled date assigned
+### Maintenance
 
-Appears in calendar view
+* `POST /maintenance`
+* `GET /maintenance`
+* `PUT /maintenance/schedule`
+* `PUT /maintenance/start/:id`
+* `PUT /maintenance/complete/:id`
 
-Overdue automatically flagged
+### Team
 
-📊 User Experience Features
+* `POST /team`
+* `GET /team`
+* `POST /team/assign`
 
-Kanban Board (Drag & Drop)
+---
 
-Calendar View for preventive maintenance
+## 🚀 How to Run the Project
 
-Smart Buttons on Equipment (Maintenance count)
-
-Overdue visual indicators
-
-Equipment scrap logic
-
-🔗 API Endpoints Summary
-
-Total Endpoints: 26
-
-Auth & Users
-
-POST /auth/register
-
-POST /auth/login
-
-GET /auth/me
-
-GET /users
-
-Health
-
-GET /health
-
-Departments
-
-POST /departments
-
-Teams
-
-POST /teams
-
-GET /teams
-
-POST /teams/:id/members
-
-GET /teams/:id/validate/:userId
-
-Equipment
-
-POST /equipment
-
-GET /equipment
-
-GET /equipment/:id
-
-PATCH /equipment/:id
-
-PATCH /equipment/:id/archive
-
-GET /equipment/:id/maintenance-count
-
-GET /equipment/:id/requests
-
-Maintenance Requests
-
-POST /requests
-
-GET /requests
-
-PATCH /requests/:id/assign
-
-PATCH /requests/:id/status
-
-PATCH /requests/:id/schedule
-
-🧪 API Testing
-
-Postman collection used to validate all flows
-
-JWT-based authentication
-
-Prisma Studio used for DB inspection
-
-🗄️ Database Visualization
-npm run prisma:studio
-
-🚀 Running the Project
-Backend
-cd backend
+```bash
 npm install
-npm run dev
-
-Frontend
-cd frontend
-npm install
+npx prisma generate
+npx prisma migrate dev
 npm start
+```
 
-🏁 Achievements
+---
 
-Fully functional enterprise-grade maintenance module
+## 🎯 Final Note
 
-End-to-end lifecycle implemented
+This project follows **industry-level backend architecture**, clean folder structure, and scalable design.
+It is suitable for real-world production use with future extensibility.
 
-Real-time scheduling & overdue logic
-
-Clean separation of responsibilities
-
-Production-ready REST API design
-
-🧠 Future Enhancements
-
-Role-based dashboard analytics
-
-Email / WhatsApp notifications
-
-SLA tracking
-
-Mobile-first technician app
-
-👨‍💻 Team
-
-Built with ❤️ for Odoo × Adani University Hackathon
-Focused on real-world industrial maintenance problems
+---
