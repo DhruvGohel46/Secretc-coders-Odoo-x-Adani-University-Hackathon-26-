@@ -9,6 +9,7 @@ import KanbanColumn from './KanbanColumn';
 import RequestForm from '../Request/RequestForm';
 import RequestDetail from '../Request/RequestDetail';
 import Button from '../Common/Button';
+import Modal from '../Common/Modal';
 import './KanbanBoard.css';
 
 const KanbanBoard = () => {
@@ -24,6 +25,7 @@ const KanbanBoard = () => {
   const [showRequestDetail, setShowRequestDetail] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     fetchKanbanData();

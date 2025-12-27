@@ -52,6 +52,7 @@ echo ========================================
 echo Port: 9090
 echo API URL: http://localhost:4000
 echo.
+
 start "GearGuard Frontend" cmd /k "cd frontend && npm start"
 
 echo.
@@ -62,11 +63,11 @@ echo.
 echo Backend:  http://localhost:4000
 echo Frontend: http://localhost:9090
 echo.
-echo Opening application in browser...
-timeout /t 3 /nobreak
+echo Waiting for frontend to be ready...
+timeout /t 10 /nobreak >nul
 
 REM Open frontend in default browser
-start http://localhost:9090
+start "" "http://localhost:9090"
 
 echo.
 echo Press any key to close this window...
