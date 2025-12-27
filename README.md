@@ -242,6 +242,17 @@ Database (PostgreSQL via Prisma)
 
 ## 🚀 How to Run the Project
 
+- Create `.env` (already included for local dev)
+```bash
+PORT=4000
+DATABASE_URL="postgresql://Username:Password@localhost:5432/maintenance_db?schema=public"
+JWT_SECRET="Random-HexCode"
+JWT_EXPIRES_IN="7d"
+OVERDUE_JOB_INTERVAL_MS=60000
+```
+
+- Ensure PostgreSQL is running and you have created a DB (example: `maintenance_db`).
+
 ```bash
 npm install
 npx prisma generate
